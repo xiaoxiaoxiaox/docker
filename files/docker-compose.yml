@@ -57,4 +57,7 @@ services:
         - "6379:6379"
       volumes:
         - ../data/redis:/data
+        - ../logs/redis:/var/log/redis-logs:rw
+        - ./redis/redis.conf:/etc/redis/redis.conf:ro
       restart: always
+      command: redis-server /etc/redis/redis.conf
