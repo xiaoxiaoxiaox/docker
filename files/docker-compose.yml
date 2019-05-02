@@ -5,6 +5,7 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+      - "9501:9501"
     links:
       - mysql-db:mysql-db
       - redis-db:redis-db
