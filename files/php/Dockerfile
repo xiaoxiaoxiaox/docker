@@ -60,16 +60,24 @@ RUN cd /home \
     && docker-php-ext-enable swoole
 
 # Install Composer
+
+#composer安装文件
+#COPY ./pkg/installer /home/installer
+COPY ./pkg/composer.phar /home/composer.phar
 ENV COMPOSER_HOME /root/composer
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN wget https://getcomposer.org/installer \
-    && php installer \
-    && mv composer.phar /usr/local/bin/composer
+#RUN wget https://getcomposer.org/installer \
+#    && php installer \
+#    && mv composer.phar /usr/local/bin/composer
+#RUN php /home/installer \
+#    && mv composer.phar /usr/local/bin/composer
+RUN mv /home/composer.phar /usr/local/bin/composer
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
 RUN rm -f /home/redis.tgz \
         rm -f /home/cphalcon.tar.gz \
-        rm -f /home/swoole.tar.gz
+        rm -f /home/swoole.tar.gz \
+        rm -f /home/composer.phar
 
 WORKDIR /data
 
