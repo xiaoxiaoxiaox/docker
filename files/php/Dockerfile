@@ -1,5 +1,5 @@
 FROM php:7.2-fpm
-LABEL maintainer="gzp@goozp.com"
+LABEL maintainer="1605882811@qq.com"
 
 
 # set timezome
@@ -31,19 +31,19 @@ RUN apt-get update && apt-get install -y \
 
 # Copy extensions had downloaded
 COPY ./pkg/redis.tgz /home/redis.tgz
-COPY ./pkg/cphalcon.tar.gz /home/cphalcon.tar.gz
+#COPY ./pkg/cphalcon.tar.gz /home/cphalcon.tar.gz
 COPY ./pkg/swoole.tar.gz /home/swoole.tar.gz
 
 # Install PECL extensions (Redis)
 RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
 # Install Phalcon extensions
-RUN cd /home \
-    && tar -zxvf cphalcon.tar.gz \
-    && mv cphalcon-* phalcon \
-    && cd phalcon/build \
-    && ./install \
-    && echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini
+#RUN cd /home \
+#    && tar -zxvf cphalcon.tar.gz \
+#    && mv cphalcon-* phalcon \
+#    && cd phalcon/build \
+#    && ./install \
+#    && echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini
 
 # Swoole extension
 RUN cd /home \
@@ -75,7 +75,7 @@ RUN mv /home/composer.phar /usr/local/bin/composer
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
 RUN rm -f /home/redis.tgz \
-        rm -f /home/cphalcon.tar.gz \
+#        rm -f /home/cphalcon.tar.gz \
         rm -f /home/swoole.tar.gz \
         rm -f /home/composer.phar
 

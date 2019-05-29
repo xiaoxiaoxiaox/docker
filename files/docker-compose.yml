@@ -49,9 +49,9 @@ services:
         - ./mysql/conf.d:/etc/mysql/conf.d:ro
       environment:
         MYSQL_ROOT_PASSWORD: 123456
-        MYSQL_DATABASE: zphaldb
-        MYSQL_USER: zphal
-        MYSQL_PASSWORD: zphal123
+#        MYSQL_DATABASE: zphaldb
+#        MYSQL_USER: zphal
+#        MYSQL_PASSWORD: zphal123
       restart: always
       command: "--character-set-server=utf8"
 
@@ -62,7 +62,7 @@ services:
       volumes:
         - ../data/redis:/data
         - ../logs/redis:/var/log/redis-logs:rw
-        - ./redis/redis.conf:/etc/redis/redis.conf:ro
+        - ./redis/redis.conf:/etc/redis/redis.conf:rw
       restart: always
       command: redis-server /etc/redis/redis.conf
 
