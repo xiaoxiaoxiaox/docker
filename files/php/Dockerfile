@@ -6,7 +6,10 @@ LABEL maintainer="1605882811@qq.com"
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+#安装加速
+#RUN cp /etc/apt/sources.list  /etc/apt/sources.list.bak
 #ADD ./sources.list /etc/apt/
+
 # Install package and PHP Core extensions
 RUN apt-get update && apt-get install -y \
         curl \
