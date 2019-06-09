@@ -4,3 +4,6 @@ LABEL maintainer="1605882811@qq.com"
 # set timezome
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+#dns解析文件
+#COPY ./env/resolv.conf /etc/resolv.conf
