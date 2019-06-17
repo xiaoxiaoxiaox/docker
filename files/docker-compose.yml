@@ -67,6 +67,16 @@ services:
       restart: always
       command: redis-server /etc/redis/redis.conf
 
+  node:
+    build: ./node
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../app:/data/www:rw
+    restart: always
+    tty: true
+    command: node
+
 #  networks:
 #    nn:
 #      driver: bridge
