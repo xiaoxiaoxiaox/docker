@@ -11,7 +11,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 #ADD ./sources.list /etc/apt/
 
 # Install package and PHP Core extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+
+RUN apt-get install -y \
         curl \
         wget \
         git \
@@ -23,7 +25,10 @@ RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+        libevent-dev
+
+RUN	docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+#    && --with-memcached=/home/app/memcached/bin/memcached \
 	&& docker-php-ext-install -j$(nproc) gd \
         && docker-php-ext-install zip \
         && docker-php-ext-install pdo_mysql \
@@ -35,11 +40,39 @@ RUN apt-get update && apt-get install -y \
 
 # Copy extensions had downloaded
 COPY ./pkg/redis.tgz /home/redis.tgz
-#COPY ./pkg/cphalcon.tar.gz /home/cphalcon.tar.gz
+#COPY swoole
 COPY ./pkg/swoole.tar.gz /home/swoole.tar.gz
+#COPY memcached
+COPY ./pkg/php-memcached-php7.tar.gz /home/memcached.tar.gz
+COPY ./pkg/libmemcached-0.44.tar.gz /home/libmemcached-0.44tar.gz
+COPY ./pkg/libmemcached-1.0.18.tar.gz /home/libmemcached-1.0.18.tar.gz
 
 # Install PECL extensions (Redis)
 RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+
+# Install the php memcached extension
+RUN cd /home \
+    && tar xvzf libmemcached-1.0.18.tar.gz \
+    && cd libmemcached-1.0.18 \
+    && ./configure --with-memcached \
+    && make \
+    && make install \
+    && rm /home/libmemcached-1.0.18.tar.gz
+
+RUN cd /home \
+    && mkdir -p memcached \
+    && tar -C memcached -zxvf /home/memcached.tar.gz --strip 1 \
+    && ( \
+            cd memcached \
+            && phpize \
+            && ./configure --disable-memcached-sasl\
+            && make -j$(nproc) \
+            && make install \
+        ) \
+#        && rm -r /home/memcached \
+        && rm /home/memcached.tar.gz
+
+RUN docker-php-ext-enable memcached
 
 # Install Phalcon extensions
 #RUN cd /home \

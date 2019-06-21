@@ -67,6 +67,15 @@ services:
       restart: always
       command: redis-server /etc/redis/redis.conf
 
+  memcached:
+    build: ./memcached
+    volumes:
+      - ../data/memcached:/var/lib/memcached
+    ports:
+      - "11211:11211"
+    depends_on:
+      - php-fpm
+
   node:
     build: ./node
     ports:
